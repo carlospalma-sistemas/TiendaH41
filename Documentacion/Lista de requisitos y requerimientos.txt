@@ -1,0 +1,21 @@
+PRODUCTO         ASEO                 ALIMENTOS
+--------
+nombre           jabón de baño        arroz
+codigo           secuencial           secuencial
+precio           3000                 2000
+presentacion     unidad x 120g        bolsa x 500g
+cantidad         15                   20
+marca            Palmolive            Roa
+tipo             aseo                 alimento
+
+
+REQUERIMIENTOS DEL USUARIO
+--------------------------
+* Como usuario, requiero que se pueda ingresar o eliminar la información de los productos que vendo en mi almacén para gestionar mi inventario. Dentro de la info se encuentra: nombre, código, precio, presentación, cantidad, marca y tipo de producto.
+* Como usuario, debo tener la posibilidad de modificar la info de precio, la cantidad, para cambiarlos en los casos de adquisición o de venta de los productos. 
+* Como usuario, debo tener la posibilidad de consultar la info de cada uno de los datos de un producto particular.
+
+
+REQUISITOS DEL SISTEMA
+----------------------
+* El sistema debe contar con un módulo que se encargue del ingreso de información de productos a vender. Se cuenta con al sigueinte info: nombre, código, precio, presentación, cantidad, marca y tipo de producto.
