@@ -15,11 +15,41 @@ public class Interaccion
         int opcion = 0;
         do
         {
-            String menu = "MENU PRINCIPAL \n" +
+            String menu = "PROGRAMA DEL TENDERO DE MI BARRIO \n" +
+                          "1. Productos \n" + 
+                          "2. Ventas \n" + 
+                          "0. Salir del programa";
+            opcion = Integer.parseInt(JOptionPane.showInputDialog(null, menu, "Seleccione opción", JOptionPane.QUESTION_MESSAGE));
+            switch(opcion)
+            {
+                case 1:
+                    this.presentarMenuProductos();
+                    break;
+                case 2:
+                    this.generarVenta();
+                    break;
+                case 0:
+                    JOptionPane.showMessageDialog(null, "Gracias", "Salir", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opción incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+                          
+            }             
+        }
+        while(opcion != 0);
+    }
+    
+    public void presentarMenuProductos()
+    {
+        int opcion = 0;
+        do
+        {
+            String menu = "MENU PRODUCTOS \n" +
                           "1. Ingresar un producto \n" + 
                           "2. Mostrar productos \n" + 
-                          "3. Buscar productos \n" + 
-                          "0. Salir";
+                          "3. Buscar productos \n" +
+                          "4. Surtir producto \n" +
+                          "0. Volver al menú principal";
             opcion = Integer.parseInt(JOptionPane.showInputDialog(null, menu, "Seleccione opción", JOptionPane.QUESTION_MESSAGE));
             switch(opcion)
             {
@@ -32,8 +62,10 @@ public class Interaccion
                 case 3:
                     this.buscarProductos();
                     break;
+                case 4:
+                    this.surtirProducto();
+                    break;
                 case 0:
-                    JOptionPane.showMessageDialog(null, "Gracias", "Salir", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opción incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
@@ -79,6 +111,28 @@ public class Interaccion
             lista = lista + p.toString() + "\n";
         }
         JOptionPane.showMessageDialog(null, lista, "Productos encontrados", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void surtirProducto()
+    {
+        this.buscarProductos();
+        int codigo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese codigo de producto a surtir", "Surtir producto", JOptionPane.QUESTION_MESSAGE));
+        int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese cantidad de producto a surtir", "Surtir producto", JOptionPane.QUESTION_MESSAGE));
+        a.aumentarCantProducto(codigo, cantidad); 
+    }
+    
+    public void generarVenta()
+    {
+        Venta v = new Venta();
+        this.buscarProductos();
+        int codigo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese codigo de producto a surtir", "Vender producto", JOptionPane.QUESTION_MESSAGE));
+        Producto p = a.buscarProducto(codigo);
+        int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese cantidad de producto a vender", "Vender producto", JOptionPane.QUESTION_MESSAGE));
+        boolean agregado = v.agregarACarrito(p, cantidad);
+        if (agregado)
+        {
+            JOptionPane.showMessageDialog(null, "Producto agregado al carrito", "Producto agregado", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
 

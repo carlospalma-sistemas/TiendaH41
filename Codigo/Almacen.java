@@ -4,12 +4,12 @@ import java.util.ArrayList;
 public class Almacen 
 {
     private List<Producto> listaProductos;
-    private ArchivoProductos a;
+    private ArchivoProductos archivo;
     
     public Almacen() 
     {
-        a = new ArchivoProductos();
-        this.listaProductos = a.leerArchivo();
+        archivo = new ArchivoProductos();
+        this.listaProductos = archivo.leerArchivo();
     }
     
     public List<Producto> getListaProductos()
@@ -33,7 +33,7 @@ public class Almacen
     public void agregarProducto(Producto p) 
     {
         this.listaProductos.add(p);
-        a.guardarProducto(p.toCSV());
+        archivo.guardarProducto(p.toCSV());
     }
 
     public int buscarIndiceProducto(int codigo)
@@ -98,6 +98,7 @@ public class Almacen
         {
             int nuevaCantidad = this.listaProductos.get(indiceAAumentarCantidad).getCantidad() + cant;
             this.listaProductos.get(indiceAAumentarCantidad).setCantidad(nuevaCantidad);
+            this.actualizarArchivo();
         }
     }
 
@@ -112,6 +113,11 @@ public class Almacen
                 this.listaProductos.get(indiceAAumentarCantidad).setCantidad(nuevaCantidad);
             }
         }
+    }
+    
+    public void actualizarArchivo()
+    {
+        archivo.guardarProductos(this.listaProductos);
     }
 
     public void modificarPrecio(int codigo, int precio) 
