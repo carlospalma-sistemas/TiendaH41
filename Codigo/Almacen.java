@@ -14,6 +14,7 @@ public class Almacen
     
     public List<Producto> getListaProductos()
     {
+        this.listaProductos = archivo.leerArchivo();
         return this.listaProductos;
     }
     
@@ -98,7 +99,6 @@ public class Almacen
         {
             int nuevaCantidad = this.listaProductos.get(indiceAAumentarCantidad).getCantidad() + cant;
             this.listaProductos.get(indiceAAumentarCantidad).setCantidad(nuevaCantidad);
-            this.actualizarArchivo();
         }
     }
 
