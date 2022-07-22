@@ -49,6 +49,7 @@ public class Interaccion
                           "2. Mostrar productos \n" + 
                           "3. Buscar productos \n" +
                           "4. Surtir producto \n" +
+                          "5. Eliminar producto \n" +
                           "0. Volver al menú principal";
             opcion = Integer.parseInt(JOptionPane.showInputDialog(null, menu, "Seleccione opción", JOptionPane.QUESTION_MESSAGE));
             switch(opcion)
@@ -64,6 +65,9 @@ public class Interaccion
                     break;
                 case 4:
                     this.surtirProducto();
+                    break;
+                case 5:
+                    this.eliminarProducto();
                     break;
                 case 0:
                     break;
@@ -119,9 +123,21 @@ public class Interaccion
         Producto p = a.buscarProducto(codigo);
         int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese cantidad de "+p.getNombre()+" "+p.getMarca()+" a surtir. Actual: "+p.getCantidad(), "Surtir producto", JOptionPane.QUESTION_MESSAGE));
         int nuevoPrecio = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese precio de "+p.getNombre()+" "+p.getMarca()+" a surtir. Actual: "+p.getPrecio(), "Surtir producto", JOptionPane.QUESTION_MESSAGE));
-        a.aumentarCantProducto(codigo, cantidad);
-        a.modificarPrecio(codigo, nuevoPrecio);
+        a.surtirProducto(codigo, cantidad, nuevoPrecio);
         JOptionPane.showMessageDialog(null, "Producto surtido exitosamente", "Producto surtido", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void eliminarProducto()
+    {
+        this.buscarProductos();
+        int codigo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese codigo de producto a eliminar", "Eliminar producto", JOptionPane.QUESTION_MESSAGE));
+        Producto p = a.buscarProducto(codigo);
+        int opcion = JOptionPane.showConfirmDialog(null, "Desea realmente eliminar el producto "+p.getNombre()+" "+p.getMarca()+"?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (opcion == JOptionPane.YES_OPTION)
+        {
+            a.eliminarProducto(codigo);
+            JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente", "Producto eliminado", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     
     public void generarVenta()
@@ -141,7 +157,7 @@ public class Interaccion
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Producto no se agregó al carrito", "Producto NO agregado", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No hay cantidad suficiente para este producto", "Producto NO agregado", JOptionPane.WARNING_MESSAGE);
             }
             opcion = JOptionPane.showConfirmDialog(null, "Desea continuar agregando productos?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         }
