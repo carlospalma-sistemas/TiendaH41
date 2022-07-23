@@ -140,7 +140,7 @@ public class GUI extends JFrame
         JScrollPane scroll = new JScrollPane(tablaProductos);
         
         JPanel contenidoTabla = new JPanel();
-        contenidoTabla.setBounds(20, 20, 750, 350);
+        contenidoTabla.setBounds(10, 20, 750, 350);
         contenidoTabla.setLayout(new GridLayout(1,0));
         contenidoTabla.add(scroll);
         panelTabla.add(contenidoTabla);
