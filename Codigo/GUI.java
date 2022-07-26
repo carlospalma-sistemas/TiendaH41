@@ -8,9 +8,15 @@ import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
+import javax.swing.JOptionPane;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
+import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class GUI extends JFrame
 {
@@ -18,8 +24,16 @@ public class GUI extends JFrame
     JComboBox comboTipo;
     JButton btnIngresar, btnModificar, btnEliminar, btnLimpiar, btnFiltrar, btnQuitarFiltro;
     DefaultTableModel dtm;
+    JTable tablaProductos;
     
     public GUI()
+    {
+        iniciarComponentes();
+        cargarTodosLosProductos();
+        implementarListeners();
+    }
+    
+    public void iniciarComponentes()
     {
         setTitle("Tienda H41");
         setBounds(100, 40, 1200, 600);
@@ -43,6 +57,7 @@ public class GUI extends JFrame
         
         txtId = new JTextField();
         txtId.setBounds(120, 20, 200, 30);
+        txtId.setEditable(false);
         panelFormulario.add(txtId);
         
         JLabel labelNombre = new JLabel("Nombre");
@@ -133,7 +148,7 @@ public class GUI extends JFrame
         String[] columnas = {"Codigo", "Nombre", "Marca", "Presentación", "Tipo", "Cant", "Precio"};     
         dtm= new DefaultTableModel(datos, columnas);
         
-        JTable tablaProductos = new JTable(dtm);
+        tablaProductos = new JTable(dtm);
         tablaProductos.setPreferredScrollableViewportSize(new Dimension(750, 350));
         tablaProductos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaProductos.setFillsViewportHeight(true);
@@ -147,4 +162,186 @@ public class GUI extends JFrame
         
         setVisible(true);
     }
+    
+    public void implementarListeners()
+    {
+        btnFiltrar.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent e) 
+                {
+                    cargarProductosFiltrados();
+                }
+            });
+            
+        btnQuitarFiltro.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent e) 
+                {
+                    limpiarFiltro();
+                }
+            });
+            
+        btnIngresar.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent e) 
+                {
+                    ingresarNuevoProducto();
+                }
+            });
+            
+        btnModificar.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent e) 
+                {
+                    modificarProducto();
+                }
+            });
+        
+        btnLimpiar.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent e) 
+                {
+                    limpiarFormulario();
+                }
+            });
+            
+        tablaProductos.getSelectionModel().addListSelectionListener(new ListSelectionListener() 
+            {
+                public void valueChanged(ListSelectionEvent e) 
+                {
+                    if (tablaProductos.getSelectedRowCount() > 0) 
+                    {
+                        int row = tablaProductos.getSelectedRow();
+                        int id = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                        cargarProductoEnFormulario(id);
+                    }
+                }
+            });
+    }
+    
+    
+    public void cargarTodosLosProductos()
+    {
+        Almacen a = new Almacen();
+        List<Producto> productos = a.getListaProductos();
+        dtm.setRowCount(0);
+        for(Producto p : productos)
+        {
+            Object[] row = { p.getCodigo(), p.getNombre(), p.getMarca(), p.getPresentacion(), p.getTipo(), p.getCantidad(), p.getPrecio()};
+            dtm.addRow(row);
+        }
+    }
+    
+    public void cargarProductosFiltrados()
+    {
+        String criterio = txtFiltro.getText();
+        Almacen a = new Almacen();
+        List<Producto> productos = a.buscarProductos(criterio);
+        dtm.setRowCount(0);
+        for(Producto p : productos)
+        {
+            Object[] row = { p.getCodigo(), p.getNombre(), p.getMarca(), p.getPresentacion(), p.getTipo(), p.getCantidad(), p.getPrecio()};
+            dtm.addRow(row);
+        }
+    }
+    
+    public void limpiarFiltro()
+    {
+        txtFiltro.setText("");
+        cargarTodosLosProductos();
+    }
+    
+    public void ingresarNuevoProducto()
+    {
+        if (!txtId.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(this, "Debe ingresar información de un nuevo producto");
+            return;
+        }
+        
+        if (txtNombre.getText().equals("") || txtMarca.getText().equals("") || txtPresentacion.getText().equals("") || comboTipo.getSelectedItem().equals("") || txtCantidad.getText().equals("") || txtPrecio.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(this, "Debe ingresar los datos completos de un nuevo producto");
+            return;
+        }
+        
+        String nombre = txtNombre.getText();
+        String marca = txtMarca.getText();
+        String presentacion = txtPresentacion.getText();
+        String tipo = comboTipo.getSelectedItem().toString();
+        int cantidad = Integer.parseInt(txtCantidad.getText());
+        int precio = Integer.parseInt(txtPrecio.getText());
+        Producto p = new Producto(nombre, precio, presentacion, cantidad, marca, tipo);
+        Almacen a = new Almacen();
+        a.agregarProducto(p);
+        limpiarFormulario();
+        cargarTodosLosProductos();
+    }
+    
+    public void modificarProducto()
+    {
+        if (txtNombre.getText().equals("") || txtMarca.getText().equals("") || txtPresentacion.getText().equals("") || comboTipo.getSelectedItem().equals("") || txtCantidad.getText().equals("") || txtPrecio.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(this, "Deben estar los datos completos de un producto a modificar");
+            return;
+        }
+        int id = Integer.parseInt(txtId.getText());
+        int cantidad = Integer.parseInt(txtCantidad.getText());
+        int precio = Integer.parseInt(txtPrecio.getText());
+        Almacen a = new Almacen();
+        a.surtirProducto(id, cantidad, precio);
+        limpiarFormulario();
+        cargarTodosLosProductos();
+    }
+    
+    
+    public void limpiarFormulario()
+    {
+        txtId.setText("");
+        txtNombre.setText("");
+        txtMarca.setText("");
+        txtPresentacion.setText("");
+        comboTipo.setSelectedItem("");
+        txtCantidad.setText("");
+        txtPrecio.setText("");
+        habilitarFormulario();
+    }
+    
+    public void habilitarFormulario()
+    {
+        txtNombre.setEditable(true);
+        txtMarca.setEditable(true);
+        txtPresentacion.setEditable(true);
+        comboTipo.setEnabled(true);
+    }
+    
+    public void deshabilitarFormulario()
+    {
+        txtNombre.setEditable(false);
+        txtMarca.setEditable(false);
+        txtPresentacion.setEditable(false);
+        comboTipo.setEnabled(false);
+    }
+    
+    
+    public void cargarProductoEnFormulario(int id)
+    {
+        Almacen a = new Almacen();
+        Producto p = a.buscarProducto(id);
+        txtId.setText(p.getCodigo() + "");
+        txtNombre.setText(p.getNombre());
+        txtMarca.setText(p.getMarca());
+        txtPresentacion.setText(p.getPresentacion());
+        comboTipo.setSelectedItem(p.getTipo());
+        txtCantidad.setText(p.getCantidad() + "");
+        txtPrecio.setText(p.getPrecio() + "");
+        deshabilitarFormulario();
+    }
+    
 }
+
+
+
+
+
+

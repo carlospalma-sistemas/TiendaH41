@@ -134,7 +134,7 @@ public class Almacen
         BaseDatos bd = new BaseDatos();
         bd.crearConexion();
         String sql = "UPDATE TProductos " +
-                     "SET cantidad = cantidad  + " + cant + ", precio = " + nuevoPrecio + " " +
+                     "SET cantidad = " + cant + ", precio = " + nuevoPrecio + " " +
                      "WHERE codigo = " + codigo;
         System.out.println(sql);
         bd.actualizar(sql);

@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=BaseDatosTest
+comment1.params=
+comment1.target=BaseDatosTest()
+comment2.params=
+comment2.target=void\ setUp()
+comment3.params=
+comment3.target=void\ probarConexionBD()
+comment4.params=
+comment4.target=void\ tearDown()
+numComments=5

@@ -85,7 +85,7 @@ public class Producto
     {
         return this.tipo;
     }
-
+    
     public String toString()
     {
         return "Cod. "+this.codigo+": "+this.nombre+" "+this.marca + " - " + this.presentacion + "(" + this.tipo + ")" + " Cant:"+this.cantidad;
